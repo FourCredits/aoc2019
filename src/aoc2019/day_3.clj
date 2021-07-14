@@ -42,16 +42,35 @@
   "Takes in a string of input, representing the paths of two wires, and returns
   the manhattan distance of the nearest intersection to the point that the two
   wires start from."
-  [input]
-  (let [[wire1 wire2] (parse-input input)
-        path1 (set (make-path wire1))
-        path2 (set (make-path wire2))]
-    (->> (set/intersection path1 path2)
+  [wires]
+  (let [paths (map (comp set make-path) wires)]
+    (->> (apply set/intersection paths)
          (map manhattan-distance)
          (sort)
          (first))))
 
+(defn one-based-index-of
+  [coll v]
+  (inc (.indexOf coll v)))
+
+(defn sum-of-steps
+  "For each path in `paths`, finds the number of steps needed to reach the given
+  intersection. Returns the sum of those numbers."
+  [paths intersection]
+  (apply + (map #(one-based-index-of % intersection) paths)))
+
+(defn part-2
+  [wires]
+  (let [paths         (map make-path wires)
+        intersections (apply set/intersection (map set paths))]
+    (apply min (map #(sum-of-steps paths %) intersections))))
+
+(defn get-input []
+  (parse-input (slurp "resources/day3.txt")))
+
 (defn -main
   "Runs day 3"
   [& args]
-  (println (part-1 (slurp "resources/day3.txt"))))
+  (let [input (get-input)]
+    (println (part-1 input))
+    (println (part-2 input))))
