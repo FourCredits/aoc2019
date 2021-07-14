@@ -1,7 +1,6 @@
 (ns aoc2019.core
-  (:gen-class))
-
-(defn part-1 [x] (- (int (/ x 3)) 2))
+  (:gen-class)
+  (:require [aoc2019.day-1 :as d1]))
 
 (defn -main
   "I don't do a whole lot ... yet."
