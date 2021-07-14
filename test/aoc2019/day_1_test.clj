@@ -19,3 +19,9 @@
       (is (p 14 2))
       (is (p 1969 966))
       (is (p 100756 50346)))))
+
+(deftest part-2-real
+  (testing "real answer is correct"
+    (is (= (let [input (get-input)]
+             (solve part-2 input))
+           4822435))))
