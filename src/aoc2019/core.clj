@@ -2,7 +2,8 @@
   (:gen-class)
   (:require [aoc2019.day-1 :as d1]
             [aoc2019.day-2 :as d2]
-            [aoc2019.day-3 :as d3]))
+            [aoc2019.day-3 :as d3]
+            [aoc2019.day-4 :as d4]))
 
 (defn -main
   "Dispatch to the day to run"
@@ -11,5 +12,6 @@
      1 (d1/-main args)
      2 (d2/-main args)
      3 (d3/-main args)
+     4 (d4/-main args)
      (println "ERROR: Can't do that day")))
   ([] (println "ERROR: Please specify a day")))
