@@ -12,4 +12,4 @@
 
 (defn -main [& args]
   (let [input (get-input)]
-    (println "Part1:" (solve part-1 input))))
+    (println "Part 1:" (solve part-1 input))))
