@@ -4,7 +4,12 @@
 
 (defn part-1 [x] (- (int (/ x 3)) 2))
 
-(defn part-2 [& args] nil)
+(defn part-2 [x]
+  (->> x
+       (iterate part-1)
+       (next)
+       (take-while pos?)
+       (apply +)))
 
 (defn solve [f nums]
   (apply + (map f nums)))
