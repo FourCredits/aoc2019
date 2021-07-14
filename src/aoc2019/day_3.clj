@@ -3,21 +3,6 @@
   (:require [clojure.string :as str]
             [clojure.set :as set]))
 
-(defn parse-line
-  "Parses a single line"
-  [line]
-  (for [command (str/split line #",")]
-    [(first command) (read-string (subs command 1))]))
-
-(defn parse-input
-  "Turns a string of input into a pair of vectors. Each vector is a collection
-  of pairs, where the first element is one of {:left, :right, :up, :down}, and
-  the second is a number. This represents the two wires, and the description of
-  how they move from the centre."
-  [input]
-  (let [[line1 line2] (str/split-lines input)]
-    (map parse-line [line1 line2])))
-
 (def ^:private direction-vectors
   {\L [-1  0]
    \R [ 1  0]
@@ -50,6 +35,7 @@
          (first))))
 
 (defn one-based-index-of
+  "Like `.indexOf`, but one-based, like MATLAB."
   [coll v]
   (inc (.indexOf coll v)))
 
@@ -65,7 +51,21 @@
         intersections (apply set/intersection (map set paths))]
     (apply min (map #(sum-of-steps paths %) intersections))))
 
-(defn get-input []
+(defn parse-line
+  "Parses a single line."
+  [line]
+  (for [command (str/split line #",")]
+    [(first command) (Integer/valueOf (subs command 1))]))
+
+(defn parse-input [input]
+  (map parse-line (str/split-lines input)))
+
+(defn get-input
+  "Reads from the input file and returns a pair of vectors. Each vector is a
+  collection of pairs, where the first element is one of {:left, :right, :up,
+  :down}, and the second is a number. This represents the two wires, and the
+  description of how they move from the centre."
+  []
   (parse-input (slurp "resources/day3.txt")))
 
 (defn -main

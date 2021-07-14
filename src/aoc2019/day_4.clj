@@ -8,41 +8,63 @@
   (let [str-rep (str n)]
     (some #{true} (map = str-rep (rest str-rep)))))
 
-(defn chomp [[e :as coll]]
-  (let [pred #(= e %)]
-    (if (empty? coll)
-      '()
-      (cons (take-while pred coll) (chomp (drop-while pred coll))))))
+(defn chomp
+  "Takes a colllection and returns that collection grouped by adjacent equal
+  elements."
+  [coll]
+  (loop [[e :as remainder] coll
+         acc []]
+    (let [pred #(= e %)]
+      (if (empty? remainder)
+        acc
+        (recur (drop-while pred remainder)
+               (conj acc (take-while pred remainder)))))))
 
-(defn adjacent-group-of-two? [n]
-  (not= 0 (count (filter #(= 2 (count %)) (chomp (str n))))))
+(defn adjacent-group-of-two?
+  "Takes a number and returns true if any adjacent digits are equal to each
+  other, but are only in a group of two, e.g. 112 will work, but 111 will not."
+  [n]
+  (->> n
+       (str)
+       (chomp)
+       (filter #(= 2 (count %)))
+       (count)
+       (pos?)))
 
-(defn never-decreasing? [n]
+(defn non-decreasing? [n]
   (apply <= (map int (str n))))
 
-(defn solve [lo hi criteria]
-    (count (filter (fn [n] (every? #(% n) criteria)) (range lo (inc hi)))))
+(defn meets-criteria?
+  ([criteria] (fn [n] (meets-criteria? criteria n)))
+  ([criteria n] (every? #(% n) criteria)))
+
+(defn solve [criteria lo hi]
+    (count (filter (meets-criteria? criteria) (range lo (inc hi)))))
+
+; six-digit? is always true for the numbers we're given, so there's no point
+; running it
 
 (def criteria1
   [adjacent-digit?
-   never-decreasing?
-   six-digit?])
+   non-decreasing?
+   #_six-digit?])
 
 (def criteria2
   [adjacent-group-of-two?
-   never-decreasing?
-   six-digit?])
+   non-decreasing?
+   #_six-digit?])
 
-(defn part-1 [lo hi] (solve lo hi criteria1))
+(defn part-1 [lo hi] (solve criteria1 lo hi))
 
-(defn part-2 [lo hi] (solve lo hi criteria2))
+(defn part-2 [lo hi] (solve criteria2 lo hi))
 
-(defn meets-criteria1? [n] (every? #(% n) criteria1))
-
-(defn meets-criteria2? [n] (every? #(% n) criteria2))
+(defn get-input
+  "Day 4 doesn't need a file, seeing its input is two numbers, but it's nice to
+  be consistent."
+  []
+  [278384 824795])
 
 (defn -main [& args]
-  (let [lo 278384
-        hi 824795]
-  (println (part-1 lo hi))
-  (println (part-2 lo hi))))
+  (let [[lo hi] (get-input)]
+    (println (part-1 lo hi))
+    (println (part-2 lo hi))))

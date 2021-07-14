@@ -16,38 +16,39 @@
   out the completed program state"
   ([program] (run-intcode program 0))
   ([program pc]
-   (let [opcode (program pc)]
+   (let [opcode (nth program pc)]
      (case opcode
        1  (recur (binary-op program pc +) (+ pc 4))
        2  (recur (binary-op program pc *) (+ pc 4))
        99 program
        :error))))
 
-(defn get-starting-program
+(defn get-input
   "Read the input from the given file."
   []
-  (mapv read-string (str/split (slurp "resources/day2.txt") #",")))
+  (mapv
+   #(Integer/valueOf %)
+   (str/split (str/trim (slurp "resources/day2.txt")) #",")))
 
 (defn part-1
   "Solves part 1 of day 2"
   [program]
   (let [program' (assoc program 1 12 2 2)]
-    ((run-intcode program') 0)))
+    (nth (run-intcode program') 0)))
 
 (defn part-2
   "Solves part 2 of day 2"
   [program]
-  (first (for [noun (range 100)
-               verb (range 100)
-               :let [program' (assoc program 1 noun 2 verb)]
-               :when (= ((run-intcode program') 0) 19690720)]
-           (+ (* 100 noun) verb))))
+  (first
+   (for [noun  (range 100)
+         verb  (range 100)
+         :let  [program' (assoc program 1 noun 2 verb)]
+         :when (= (nth (run-intcode program') 0) 19690720)]
+     (+ (* 100 noun) verb))))
 
 (defn -main
   "Runs day 2"
   [& args]
-  (let [program  (get-starting-program)
-        result-1 (part-1 program)
-        result-2 (part-2 program)]
-    (println "Part 1:" result-1)
-    (println "Part 2:" result-2)))
+  (let [program (get-input)]
+    (println "Part 1:" (part-1 program))
+    (println "Part 2:" (part-2 program))))

@@ -18,8 +18,8 @@
 
 (deftest part-1-real
   (testing "Part 1 of day 2"
-    (is (= (part-1 (get-starting-program)) 6730673))))
+    (is (= (part-1 (get-input)) 6730673))))
 
 (deftest part-2-real
   (testing "Part 2 of day 2"
-    (is (= (part-2 (get-starting-program)) 3749))))
+    (is (= (part-2 (get-input)) 3749))))
