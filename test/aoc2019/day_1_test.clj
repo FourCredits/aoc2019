@@ -12,3 +12,10 @@
 (deftest part-1-real
   (testing "real answer is correct"
     (is (= (let [input (get-input)] (solve part-1 input)) 3216868))))
+
+(deftest part-2-test
+  (testing "part 2 works"
+    (let [p #(= (part-2 %1) %2)]
+      (is (p 14 2))
+      (is (p 1969 966))
+      (is (p 100756 50346)))))

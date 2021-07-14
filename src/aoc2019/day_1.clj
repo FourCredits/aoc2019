@@ -4,6 +4,8 @@
 
 (defn part-1 [x] (- (int (/ x 3)) 2))
 
+(defn part-2 [& args] nil)
+
 (defn solve [f nums]
   (apply + (map f nums)))
 
