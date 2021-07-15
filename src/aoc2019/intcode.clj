@@ -11,10 +11,10 @@
         source-pos (program (+ pc 3))]
      (assoc program source-pos (f target-1 target-2))))
 
-(defn run-intcode
+(defn intcode
   "The Intcode interpreter - takes a sequence of integers as input, and spits
   out the completed program state"
-  ([program] (run-intcode program 0))
+  ([program] (intcode program 0))
   ([program pc]
    (let [opcode (nth program pc)]
      (case opcode

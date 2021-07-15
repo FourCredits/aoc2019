@@ -7,7 +7,7 @@
   "Solves part 1 of day 2"
   [program]
   (let [program' (assoc program 1 12 2 2)]
-    (nth (run-intcode program') 0)))
+    (nth (intcode program') 0)))
 
 (defn part-2
   "Solves part 2 of day 2"
@@ -16,7 +16,7 @@
    (for [noun  (range 100)
          verb  (range 100)
          :let  [program' (assoc program 1 noun 2 verb)]
-         :when (= (nth (run-intcode program') 0) 19690720)]
+         :when (= (nth (intcode program') 0) 19690720)]
      (+ (* 100 noun) verb))))
 
 (defn -main
