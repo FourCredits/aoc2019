@@ -18,8 +18,19 @@
   ([program pc]
    (let [opcode (nth program pc)]
      (case opcode
+       ; Addition
        1  (recur (binary-op program pc +) (+ pc 4))
+       ; Multiplication
        2  (recur (binary-op program pc *) (+ pc 4))
+       ; Read input
+       3  (let [input (Integer/valueOf (read-line))
+                program' (assoc program (nth program (inc pc)) input)]
+            (recur program' (+ pc 2)))
+       ; Print output
+       4 (do
+           (println (program (program (inc pc))))
+           (recur program (+ pc 2)))
+       ; Halt
        99 program
        :error))))
 
