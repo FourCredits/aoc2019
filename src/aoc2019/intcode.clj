@@ -36,7 +36,7 @@
 
 (defn get-input
   "Read the input from the given file."
-  []
+  [filepath]
   (mapv
    #(Integer/valueOf %)
-   (str/split (str/trim (slurp "resources/day2.txt")) #",")))
+   (str/split (str/trim (slurp filepath)) #",")))
