@@ -55,7 +55,7 @@
        :error))))
 
 (defn get-input
-  "Read the input from the given file."
+  "Read the input program from the given file."
   [filepath]
   (mapv
    #(Integer/valueOf %)
