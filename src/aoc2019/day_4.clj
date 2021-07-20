@@ -35,7 +35,7 @@
   (apply <= (map int (str n))))
 
 (defn meets-criteria?
-  ([criteria] (fn [n] (meets-criteria? criteria n)))
+  ([criteria] (partial meets-criteria? criteria))
   ([criteria n] (every? #(% n) criteria)))
 
 (defn solve [criteria lo hi]
