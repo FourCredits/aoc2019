@@ -21,10 +21,10 @@
   (first (first (filter #(some #{object} (second %)) orbits))))
 
 (defn find-parents [object orbits]
-  (let [parent (find-parent object orbits)]
-    (if (nil? parent)
-      '()
-      (cons parent (find-parents parent orbits)))))
+  (if-let [parent (find-parent object orbits)]
+      (cons parent (find-parents parent orbits))
+      '()))
+
 
 (defn num-orbital-transfers [orbits source target]
   (let [source-parents (find-parents source orbits)
