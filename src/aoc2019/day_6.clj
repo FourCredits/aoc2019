@@ -8,12 +8,6 @@
   [object orbits]
   (map second (filter #(= object (first %)) orbits)))
 
-(defn make-table [orbits]
-  (let [unique-orbits (set (apply concat orbits))
-        sub-orbits    (map #(find-sub-orbits % orbits) unique-orbits)
-        lookup-table  (into {} (map vector unique-orbits sub-orbits))]
-    lookup-table))
-
 (defn part-1 [orbits]
     ; Depth-first traversal
     (loop [result 0
@@ -43,6 +37,10 @@
 
 (defn part-2 [orbits]
   (num-orbital-transfers orbits "YOU" "SAN"))
+(defn make-table [orbits]
+  (let [unique-orbits (set (apply concat orbits))
+        sub-orbits    (map #(find-sub-orbits % orbits) unique-orbits)]
+    (into {} (map vector unique-orbits sub-orbits))))
 
 (defn parse [string]
   (make-table (map #(str/split % #"\)") (str/split-lines string))))
