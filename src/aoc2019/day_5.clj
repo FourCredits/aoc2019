@@ -3,19 +3,9 @@
   (:require [aoc2019.intcode :refer :all]
             [clojure.string :as str]))
 
-(defn part-1
-  [program]
-  (let [output (with-out-str
-                 (with-in-str "1"
-                   (intcode program)))]
-    (Integer/valueOf (last (str/split-lines output)))))
+(defn part-1 [program] (last (:output (run-pure program [1]))))
 
-(defn part-2
-  [program]
-  (let [output (with-out-str
-                 (with-in-str "5"
-                   (intcode program)))]
-    (Integer/valueOf (str/trim output))))
+(defn part-2 [program] (first (:output (run-pure program [5]))))
 
 (def filepath "resources/day5.txt")
 
