@@ -25,12 +25,13 @@
       (cons parent (find-parents parent orbits))
       '()))
 
+(defn intersection [c1 c2]
+  (filter #(some #{%} c1) c2))
 
 (defn num-orbital-transfers [orbits source target]
   (let [source-parents (find-parents source orbits)
         target-parents (find-parents target orbits)
-        common-parent  (first
-                         (filter #(some #{%} target-parents) source-parents))]
+        common-parent  (first (intersection source-parents target-parents))]
     (+ (.indexOf source-parents common-parent)
        (.indexOf target-parents common-parent))))
 
