@@ -8,7 +8,7 @@
   (let [str-rep (str n)]
     (some #{true} (map = str-rep (rest str-rep)))))
 
-(defn chomp
+(defn group-adjacent
   "Takes a colllection and returns that collection grouped by adjacent equal
   elements."
   [coll]
@@ -26,7 +26,7 @@
   [n]
   (->> n
        (str)
-       (chomp)
+       (group-adjacent)
        (filter #(= 2 (count %)))
        (count)
        (pos?)))
