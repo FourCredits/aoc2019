@@ -12,11 +12,10 @@
     ; Depth-first traversal
     (loop [result 0
            queue  '([0 "COM"])]
-      (if (empty? queue)
-        result
-        (let [[depth k] (peek queue)]
-          (recur (+ result depth)
-                 (apply list (concat (pop queue) (map #(vector (inc depth) %) (orbits k)))))))))
+      (if-let [[[depth k] & queue'] (seq queue)]
+        (recur (+ result depth)
+               (apply list (concat queue' (map #(vector (inc depth) %) (orbits k)))))
+        result)))
 
 (defn find-parent [object orbits]
   (first (first (filter #(some #{object} (second %)) orbits))))
