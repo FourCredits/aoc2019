@@ -35,8 +35,8 @@
     (+ (.indexOf source-parents common-parent)
        (.indexOf target-parents common-parent))))
 
-(defn part-2 [orbits]
-  (num-orbital-transfers orbits "YOU" "SAN"))
+(defn part-2 [orbits] (num-orbital-transfers orbits "YOU" "SAN"))
+
 (defn make-table [orbits]
   (let [unique-orbits (set (apply concat orbits))
         sub-orbits    (map #(find-sub-orbits % orbits) unique-orbits)]
@@ -45,8 +45,7 @@
 (defn parse [string]
   (make-table (map #(str/split % #"\)") (str/split-lines string))))
 
-(defn get-input []
-  (parse (slurp "resources/day6.txt")))
+(defn get-input [] (parse (slurp "resources/day6.txt")))
 
 (defn -main [& args]
   (let [input (get-input)]
