@@ -29,7 +29,7 @@
     135 (examples 2)))
 
 (deftest part-1-real
-  (is (part-1 (get-input)) 1195))
+  (is (= (part-1 (get-input)) 1195)))
 
 (deftest part-2-tests
   (are [answer input] (= (part-2 (parse-input input)) answer)
@@ -38,4 +38,4 @@
     410 (examples 2)))
 
 (deftest part-2-real
-  (is (part-2 (get-input)) 91518))
+  (is (= (part-2 (get-input)) 91518)))
