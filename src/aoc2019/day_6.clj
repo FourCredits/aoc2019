@@ -10,13 +10,16 @@
   (map second (filter #(= object (first %)) orbits)))
 
 (defn part-1 [orbits]
-    ; Depth-first traversal
-    (loop [result 0
-           queue  '([0 "COM"])]
-      (if-let [[[depth k] & queue'] (seq queue)]
-        (recur (+ result depth)
-               (apply list (concat queue' (map #(vector (inc depth) %) (orbits k)))))
-        result)))
+  ; Depth-first traversal
+  (loop [result 0
+         queue  '([0 "COM"])]
+    (if-let [[[depth k] & queue'] (seq queue)]
+      (recur (+ result depth)
+             (->> (get orbits k)
+                  (map #(vector (inc depth) %))
+                  (concat queue')
+                  (apply list)))
+      result)))
 
 (defn find-parent [object orbits]
   (first (first (filter #(some #{object} (second %)) orbits))))
