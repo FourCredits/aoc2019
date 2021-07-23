@@ -36,7 +36,7 @@
 
 (defn meets-criteria?
   ([criteria] (partial meets-criteria? criteria))
-  ([criteria n] (every? #(% n) criteria)))
+  ([criteria ^Long n] (every? #(% n) criteria)))
 
 (defn solve [criteria lo hi]
     (count (filter (meets-criteria? criteria) (range lo (inc hi)))))
