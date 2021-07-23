@@ -11,7 +11,7 @@
 
 (defn -main
   [& args]
-  (let [input-program (get-input filepath)]
+  (let [input-program (read-intcode-program filepath)]
     (println (part-1 input-program))
     (println (part-2 input-program))))
 

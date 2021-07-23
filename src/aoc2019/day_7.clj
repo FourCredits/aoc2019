@@ -47,6 +47,6 @@
 (defn part-2 [program] (solve program feedback-loop [5 9]))
 
 (defn -main [& args]
-  (let [program (get-input "resources/day7.txt")]
+  (let [program (read-intcode-program "resources/day7.txt")]
     (println (part-1 program))
     (println (part-2 program))))

@@ -1,9 +1,9 @@
 (ns aoc2019.day-7-test
   (:require [clojure.test :refer :all]
             [aoc2019.day-7 :refer :all]
-            [aoc2019.intcode :refer [get-input]]))
+            [aoc2019.intcode :refer [read-intcode-program]]))
 
-(def puzzle-input (get-input "resources/day7.txt"))
+(def puzzle-input (read-intcode-program "resources/day7.txt"))
 
 ; Part 1
 

@@ -22,6 +22,6 @@
 (defn -main
   "Runs day 2"
   [& args]
-  (let [program (get-input "resources/day2.txt")]
+  (let [program (read-intcode-program "resources/day2.txt")]
     (println "Part 1:" (part-1 program))
     (println "Part 2:" (part-2 program))))
