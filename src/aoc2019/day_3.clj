@@ -1,7 +1,8 @@
 (ns aoc2019.day-3
   (:gen-class)
   (:require [clojure.string :as str]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [aoc2019.utils :refer :all]))
 
 (def ^:private direction-vectors
   {\L [-1  0]
@@ -20,9 +21,6 @@
                          (range 1 (inc target)))]
        (concat progress (make-path (rest wire) (last progress)))))))
 
-(defn manhattan-distance [[x y]]
-  (+ (Math/abs x) (Math/abs y)))
-
 (defn part-1
   "Takes in a string of input, representing the paths of two wires, and returns
   the manhattan distance of the nearest intersection to the point that the two
@@ -33,11 +31,6 @@
          (map manhattan-distance)
          (sort)
          (first))))
-
-(defn one-based-index-of
-  "Like `.indexOf`, but one-based, like MATLAB."
-  [coll v]
-  (inc (.indexOf coll v)))
 
 (defn sum-of-steps
   "For each path in `paths`, finds the number of steps needed to reach the given

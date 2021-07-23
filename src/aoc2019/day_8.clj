@@ -1,20 +1,7 @@
 (ns aoc2019.day-8
   (:gen-class)
-  (:require [clojure.string :as str]))
-
-(defn groups-of
-  "Separates `coll` into groups of `n`"
-  [n coll]
-  (loop [remainder coll
-         result []]
-    (if (empty? remainder)
-      result
-      (recur (drop n remainder)
-             (conj result (take n remainder))))))
-
-(defn count-digit
-  ([n] (partial count-digit n))
-  ([n coll] (count (filter #{n} coll))))
+  (:require [clojure.string :as str]
+            [aoc2019.utils :refer :all]))
 
 (defn verify-transmission
   "Takes a collection of numbers `coll`, a width `w`, and a height `h`. Finds
@@ -24,12 +11,10 @@
   {:pre [(zero? (mod (count coll) (* w h)))]}
   (->> coll
        (groups-of (* w h))
-       (sort-by (count-digit 0))
+       (sort-by (count-occurrence 0))
        (first)
-       ((juxt (count-digit 1) (count-digit 2)))
+       ((juxt (count-occurrence 1) (count-occurrence 2)))
        (apply *)))
-
-(defn transpose [m] (apply mapv vector m))
 
 (defn determine-color [pixels]
   (if-let [[p & ps] (seq pixels)]

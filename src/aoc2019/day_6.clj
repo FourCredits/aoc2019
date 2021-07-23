@@ -1,6 +1,7 @@
 (ns aoc2019.day-6
   (:gen-class)
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [aoc2019.utils :refer :all]))
 
 (defn find-sub-orbits
   "Returns a list of objects that orbit `object`, taken from the `orbits`
@@ -24,9 +25,6 @@
   (if-let [parent (find-parent object orbits)]
       (cons parent (find-parents parent orbits))
       '()))
-
-(defn intersection [c1 c2]
-  (filter #(some #{%} c1) c2))
 
 (defn num-orbital-transfers [orbits source target]
   (let [source-parents (find-parents source orbits)

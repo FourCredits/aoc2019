@@ -1,15 +1,8 @@
 (ns aoc2019.intcode
   (:gen-class)
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [aoc2019.utils :refer :all]))
 
-(defn digits
-  "Takes a number `n` and returns its digits as a list"
-  [n]
-  (loop [acc '()
-         i   n]
-    (if (zero? i)
-      acc
-      (recur (conj acc (mod i 10)) (int (/ i 10))))))
 
 (defn process-opcode-and-modes
   "Takes in a number and returns an opcode (the two rightmost digits), and a
