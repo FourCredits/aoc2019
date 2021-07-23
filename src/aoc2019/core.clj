@@ -5,7 +5,9 @@
             [aoc2019.day-3 :as d3]
             [aoc2019.day-4 :as d4]
             [aoc2019.day-5 :as d5]
-            [aoc2019.day-6 :as d6]))
+            [aoc2019.day-6 :as d6]
+            [aoc2019.day-7 :as d7]
+            [aoc2019.day-8 :as d8]
 
 (def main-funcs
   {1 d1/-main
@@ -13,7 +15,9 @@
    3 d3/-main
    4 d4/-main
    5 d5/-main
-   6 d6/-main})
+   6 d6/-main
+   7 d7/-main
+   8 d8/-main
 
 (defn -main
   "Dispatch to the day to run"
