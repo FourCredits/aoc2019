@@ -3,91 +3,116 @@
   (:require [clojure.string :as str]
             [aoc2019.utils :refer :all]))
 
+; Intcode internal functions
 
-(defn process-opcode-and-modes
+(defn- process-instruction
   "Takes in a number and returns an opcode (the two rightmost digits), and a
   list of parameter modes (the left digits, in reverse order). After the given
   digits of the mode is an bunch of 0s - hopefully enough for future purposes.
-  `(process-opcode-and-modes 1002)` returns `[2 [0 1 0 0 ...]]`"
+  `(process-instruction 1002)` returns `[2 [0 1 0 0 ...]]`"
   [n]
   (let [opcode (mod n 100)
         modes (reverse (digits (int (/ n 100))))]
     [opcode (concat modes (repeat 5 0))]))
 
-(defn advance-by
+(defn- advance-by
   "Advances the program counter by n."
   [n computer]
-  (update computer :pc #(+ % n)))
+  (update computer :pc #(+ n %)))
 
-(defn parse-read-parameter
-  "Reads from `memory` at `pc + offset`, depending on the mode:
-  - 0: Treats it as an address, dereferencing accordingly.
-  - 1: Treats it as an immediate value, just returning it."
-  [{:keys [memory pc]} offset modes]
-  {:pre [(pos? offset)]}
-  (let [param (get memory (+ pc offset))]
-    (if (zero? (nth modes (dec offset)))
-      (get memory param)
-      param)))
+(defn- get-mem
+  "Abstracts the process of reading from memory. With no address given, will
+  default to pc"
+  ([computer address] (get-in computer [:memory address] 0))
+  ([{:keys [memory pc]}] (get memory pc 0)))
 
-(defn write-to-memory-from-parameter
-  [{:keys [memory pc] :as computer} offset value]
-  (let [address (get memory (+ pc offset))]
-    (assoc-in computer [:memory address] value)))
+(defn- assoc-mem
+  "Abstracts the process of writing to memory"
+  [computer k v]
+  (assoc-in computer [:memory k] v))
+
+(defn- read-from-param
+  "Reads from the param-num -th parameter, respecting the appropriate mode."
+  [{:keys [pc relative-base] :as computer} param-num modes]
+  {:pre [(pos? param-num)]}
+  (let [param (get-mem computer (+ pc param-num))]
+    (case (nth modes (dec param-num))
+      0 (get-mem computer param)
+      1 param
+      2 (get-mem computer (+ relative-base param)))))
+
+(defn- write-to-param
+  "Writes to the param-num -th parameter, respecting the appropriate mode."
+  [{:keys [pc relative-base] :as computer} modes param-num value]
+  {:pre [(pos? param-num)]}
+  (let [param (get-mem computer (+ pc param-num))
+        address (case (nth modes (dec param-num))
+                  0 param
+                  1 :error
+                  2 (+ relative-base param))]
+    (assoc-mem computer address value)))
+
+; User-level intcode functions
 
 (defn step
   "Takes a single step of the intcode machine. Does *not* process input
   instructions."
-  ([{:keys [memory pc output] :as computer}]
-   (let [[opcode modes] (process-opcode-and-modes (nth memory pc))]
+  ([{:keys [memory pc] :as computer}]
+   (let [[opcode modes] (process-instruction (get-mem computer pc))]
      (step computer opcode modes)))
-  ([{:keys [memory pc] :as computer} opcode modes]
-   (letfn [(read-param [n] (parse-read-parameter computer n modes))
-           (write-at-param [k v] (write-to-memory-from-parameter computer k v))
-           (binary-op [f] (write-at-param 3 (f (read-param 1) (read-param 2))))
+  ([computer opcode modes]
+   {:pre [(not (:halted? computer))]}
+   (letfn [(read-p [n] (read-from-param computer n modes))
+           (write-p [k v] (write-to-param computer modes k v))
+           (binary-op [f] (write-p 3 (f (read-p 1) (read-p 2))))
            (comparison-op [f] (binary-op #(if (f %1 %2) 1 0)))
            (jump-op [f]
-             (update computer :pc #(if (f (read-param 1))
-                                     (read-param 2)
-                                     (+ % 3))))]
+             (update computer :pc #(if (f (read-p 1)) (read-p 2) (+ % 3))))]
      (case opcode
        1  (advance-by 4 (binary-op +))
        2  (advance-by 4 (binary-op *))
-       4  (advance-by 2 (update computer :output #(conj % (read-param 1))))
+       4  (advance-by 2 (update computer :output #(conj % (read-p 1))))
        5  (jump-op (complement zero?))
        6  (jump-op zero?)
        7  (advance-by 4 (comparison-op <))
        8  (advance-by 4 (comparison-op =))
+       9  (advance-by 2 (update computer :relative-base #(+ % (read-p 1))))
        99 (assoc computer :halted? true)
        :error))))
+
+(defn make-computer
+  "Default values for pc and output for a given program"
+  [program]
+  {:memory (into {} (map vector (range) program))
+   :pc 0
+   :output []
+   :relative-base 0})
 
 (defn run-until-needs-input
   "Runs the provided intcode computer until it hits an instruction that needs
   input from the user, or the program halts."
-  [{:keys [memory pc] :as computer}]
-  (let [[opcode modes] (process-opcode-and-modes (nth memory pc))]
+  [{:keys [pc] :as computer}]
+  (let [[opcode modes] (process-instruction (get-mem computer pc))]
     (cond
       (= 3 opcode) computer
       (:halted? computer) computer
       :else (recur (step computer opcode modes)))))
 
+; TODO
+
 (defn input-value
   "Writes `value` to the address given at `pc + 1`. Requires that the
   instruction at pc is 3."
   [{:keys [memory pc] :as computer} value]
-  {:pre [(= 3 (get memory pc))]}
-  (advance-by 2 (write-to-memory-from-parameter computer 1 value)))
+  {:pre [(= 3 (mod (get memory pc 0) 100))]}
+  (let [[opcode modes] (process-instruction (get-mem computer pc))]
+    (advance-by 2 (write-to-param computer modes 1 value))))
 
 (defn input-values
   "Writes the first value from `values`, runs the `computer` until it needs
   more input, then gives the next value, and so on."
   [values computer]
   (reduce #(input-value (run-until-needs-input %1) %2) computer values))
-
-(defn make-computer
-  "Default values for pc and output for a given program"
-  [program]
-  {:memory program :pc 0 :output []})
 
 (defn run-io
   "Runs the given program on an intcode computer, taking input and output
@@ -102,7 +127,6 @@
         (->> (read-line)
              (Integer/valueOf)
              (input-value computer')
-             (run-until-needs-input)
              (recur))))))
 
 (defn run-pure
@@ -114,23 +138,19 @@
   ([program inputs]
    (loop [computer (make-computer program)
           outputs-so-far []
-          to-be-inputted inputs]
+          [i & is] inputs]
      (let [{:keys [halted? output] :as computer'} (run-until-needs-input
                                                      computer)
-           outputs' (if output
-                      (concat outputs-so-far output)
-                      outputs-so-far)]
+           outputs' (concat outputs-so-far output)]
        (cond
          halted? (assoc computer' :output outputs')
-         (empty? to-be-inputted) :error
-         :else (recur (input-value computer (first to-be-inputted))
-                      outputs'
-                      (rest to-be-inputted)))))))
+         i (recur (input-value computer' i) outputs' is)
+         :else :error)))))
+
+; Reading intcode programs
 
 (defn read-intcode-program
   "Read the input program from the given file."
   [filepath]
   (mapv #(Integer/valueOf %)
         (str/split (str/trim (slurp filepath)) #",")))
-
-(def get-input read-intcode-program)

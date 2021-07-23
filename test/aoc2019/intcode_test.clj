@@ -23,11 +23,11 @@
        {:memory [1102 2 3 5 99 0] :pc 0} {:memory [1102 2 3 5 99 6] :pc 4}))
 
 (deftest reading-io
-  (is (= (:memory (with-in-str "8\n9" (run-io [3 5 3 6 99 0 0])))
+  (is (= (vals (:memory (with-in-str "8\n9" (run-io [3 5 3 6 99 0 0]))))
          [3 5 3 6 99 8 9])))
 
 (deftest reading-pure
-  (is (= (:memory (run-pure [3 5 3 6 99 0 0] [8 9]))
+  (is (= (vals (:memory (run-pure [3 5 3 6 99 0 0] [8 9])))
          [3 5 3 6 99 8 9])))
 
 (deftest printing-io
@@ -35,14 +35,13 @@
          "4\n99\n")))
 
 (deftest printing-pure
-  (is (= (run-pure [4 0 4 4 99])
-         {:memory [4 0 4 4 99] :pc 4 :halted? true :output [4 99]})))
+  (is (= (:output (run-pure [4 0 4 4 99])) [4 99])))
 
 (deftest equals
   (testing "Basic tests"
-    (is (= (:memory (run-pure [8 0 1 5 99 -1]))
+    (is (= (vals (:memory (run-pure [8 0 1 5 99 -1])))
            [8 0 1 5 99 0]))
-    (is (= (:memory (run-pure [1108 5 5 0 99]))
+    (is (= (vals (:memory (run-pure [1108 5 5 0 99])))
            [1 5 5 0 99])))
   (testing "Given examples"
     (are [program in out] (= (:output (run-pure program in))
@@ -82,3 +81,36 @@
       [7] [999]
       [8] [1000]
       [9] [1001])))
+
+(deftest relative-mode
+  (testing "Setting relative base"
+    (is (= (:relative-base (run-pure [99 98 97])) 0)
+        "Relative base starts at 0")
+    (is (= (:relative-base (run-pure [109 19 109 -2 99])) 17)
+        "The relative base instruction adds (or subtracts) from the current
+        value"))
+  (testing "Using relative base instructions"
+    (is (= (:output (run-pure [2201 2 3 7 4 7 99 0])) [10])
+        "Using relative instructions")
+    (is (= (:output (run-pure [109 2 204 2 99])) [99])
+        "Setting relative base, then using it")))
+
+(deftest large-numbers
+  (testing "handling arbitrarily large numbers"
+    (is (= (:output (run-pure [1102 34915192 34915192 7 4 7 99 0]))
+           [1219070632396864])
+        "Adding two large numbers")
+    (is (= (:output (run-pure [104 1125899906842624 99]))
+           [1125899906842624])))
+  (testing "addressing large numbers"
+    (is (= (:output (run-pure [4 34567 99])) [0])
+           "You can read addresses much larger than initial program, and is
+           by default 0")
+    (is (= (:output (run-pure [1102 4 5 34567 4 34567 99]) [9]))
+           "Large addresses outside of initial program can be written to and
+           read from just like any other part of memory")))
+
+(deftest quine
+  (is (let [program [109 1 204 -1 1001 100 1 100 1008 100 16 101 1006 101 0 99]]
+        (= (:output (run-pure program))
+           program))))
