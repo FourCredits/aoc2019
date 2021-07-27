@@ -38,3 +38,7 @@
       acc
       (recur (conj acc (mod b 10)) (int (/ b 10))))))
 
+(defn gcd [a b]
+  (if (zero? b)
+    a
+    (recur b (mod a b))))
