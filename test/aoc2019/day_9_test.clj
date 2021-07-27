@@ -7,3 +7,6 @@
 
 (deftest part-1-real
   (is (= (part-1 puzzle-input) [2518058886])))
+
+(deftest part-2-real
+  (is (= (part-2 puzzle-input) [44292])))

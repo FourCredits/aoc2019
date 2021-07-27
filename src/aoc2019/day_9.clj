@@ -4,7 +4,7 @@
 
 (defn part-1 [program] (:output (run-pure program [1])))
 
-(defn part-2 [program] nil)
+(defn part-2 [program] (:output (run-pure program [2])))
 
 (def filepath "resources/day9.txt")
 
