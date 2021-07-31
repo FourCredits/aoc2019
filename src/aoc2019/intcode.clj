@@ -98,8 +98,6 @@
       (:halted? computer) computer
       :else (recur (step computer opcode modes)))))
 
-; TODO
-
 (defn input-value
   "Writes `value` to the address given at `pc + 1`. Requires that the
   instruction at pc is 3."

@@ -22,7 +22,7 @@
       result)))
 
 (defn find-parent [object orbits]
-  (first (first (filter #(some #{object} (second %)) orbits))))
+  (ffirst (filter #(some #{object} (second %)) orbits)))
 
 (defn find-parents [object orbits]
   (if-let [parent (find-parent object orbits)]
