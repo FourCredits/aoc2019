@@ -95,10 +95,17 @@
 (deftest part-1-real
   (is (= (part-1 puzzle-input) 309)))
 
-; TODO uncomment
+(deftest part-2-worked-example
+  (let [field     (parse (test-fields 6))
+        station   (find-best-station field)
+        others    (remove #{station} field)
+        destroyed (destroyed-order station others)]
+    (is (= station [8 3]) (str "station should be [8 3] but is" station))
+    (is (= (take 9 destroyed)
+           [[8 1] [9 0] [9 1] [10 0] [9 2] [11 1] [12 1] [11 2] [15 1]]))))
 
-#_(deftest part-2-example
+(deftest part-2-example
   (is (= (part-2 (parse (test-fields 4))) 802)))
 
-#_(deftest part-2-real
-  (is (= (part-2 puzzle-input) [TODO])))
+(deftest part-2-real
+  (is (= (part-2 puzzle-input) 416)))

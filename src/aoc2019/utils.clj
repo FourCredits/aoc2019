@@ -42,3 +42,18 @@
   (if (zero? b)
     a
     (recur b (mod a b))))
+
+(defn arg
+  "Finds the argument of a complex number."
+  [real imag]
+  (Math/atan2 imag real))
+
+(defn magnitude
+  "Finds the magnitude of a vector (or complex number)."
+  [vect]
+  (Math/sqrt (apply + (map #(* % %) vect))))
+
+(defn complex-sub
+  "Subtracts two complex numbers"
+  [[a1 b1] [a2 b2]]
+  [(- a1 a2) (- b1 b2)])

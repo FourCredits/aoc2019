@@ -3,43 +3,74 @@
   (:require [clojure.string :as str]
             [aoc2019.utils :refer :all]))
 
-(defn polar
-  "Takes a `real` part and an `imag`inary part, and returns the magnitude and
-  phase of the number. Takes phase at starting at 12 o'clock and going
-  clockwise (due to part 2)"
-  [real imag]
-  [(Math/sqrt (+ (* real real) (* imag imag))) (Math/atan2 imag real)])
-
-(defn complex-sub
-  "Subtracts two complex numbers"
-  [[a1 b1] [a2 b2]]
-  [(- a1 a2) (- b1 b2)])
-
 (defn num-line-of-sight
-  "Counts the number of `asteriods` that are in direct line of sight of `(x y)`"
-  [[x y] asteriods]
-  (count (set (map #(second (apply polar (complex-sub % [x y]))) asteriods))))
+  "Counts the number of `asteriods` that are in direct line of sight of `pos`"
+  [pos asteriods]
+  (count (set (map #(apply arg (complex-sub % pos)) asteriods))))
 
 (defn find-best-station
+  "Among `potentials`, finds the best place to put a station - the best place
+  being where the most asteriods are within direct line of sight."
   [potentials]
-  (let [lookup (into
-                {}
-                (map #(vector (num-line-of-sight % (remove #{%} potentials)) %)
-                     potentials))]
-    (get lookup (apply max (keys lookup)) :error)))
+  (apply max-key #(num-line-of-sight % (remove #{%} potentials)) potentials))
 
 (defn part-1 [asteriods]
   (let [station (find-best-station asteriods)]
     (num-line-of-sight station (remove #{station} asteriods))))
 
-(defn canonical-form
-  [[mag arg]]
-  [mag (if (neg? arg)
-         (+ (* 2 Math/PI) arg)
-         arg)])
+(defn round-robin-ordering
+  "Takes a collection of collections, and returns a flattened version, in a
+  special order: it takes the first element of each collection, then the
+  second of each, and so on."
+  [colls]
+  (loop [acc   []
+         rests colls]
+    (if (every? empty? rests)
+      acc
+      (recur (concat acc (remove nil? (map first rests)))
+             (map rest rests)))))
+
+(defn angle-between
+  "Returns the angle ABC, where A is the station + i, B is the station,
+  and C is the asteriod. Note that the angle is from 0 to 2 * pi."
+  [station asteriod]
+  (let [[x y] (complex-sub asteriod station)
+        angle (Math/atan2 x (- y))]
+    (if (neg? angle)
+      (+ angle (* 2 Math/PI))
+      angle)))
+
+(defn group-by-angle
+  "Groups the members of `others` by those that have the same angle to the
+  station. Returns in sorted order, going from directly above and then
+  clockwise after that."
+  [station others]
+  (->> others
+       (group-by #(angle-between station %))
+       (into (sorted-map))
+       (vals)))
+
+(defn sort-by-magnitude
+  "Sorts a collection of asteriods by the magnitude of the distance from that
+  asteriod to the station"
+  [station others]
+  (sort-by #(magnitude (complex-sub station %)) others))
+
+(defn destroyed-order
+  "Orders the asteriods in `others` in the order they would be destroyed by the
+  laser."
+  [station others]
+  (->> others
+       (group-by-angle station)
+       (map #(sort-by-magnitude station %))
+       (round-robin-ordering)))
 
 (defn part-2 [asteriods]
-  nil)
+  (let [station   (find-best-station asteriods)
+        others    (remove #{station} asteriods)
+        destroyed (destroyed-order station others)
+        [x y]     (nth destroyed (dec 200))] ; Prevent OBOEs
+    (+ (* x 100) y)))
 
 (defn parse [input]
   (let [field (str/split-lines input)]
