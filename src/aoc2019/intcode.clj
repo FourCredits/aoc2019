@@ -150,5 +150,5 @@
 (defn read-intcode-program
   "Read the input program from the given file."
   [filepath]
-  (mapv #(Integer/valueOf %)
+  (mapv #(Long/valueOf %)
         (str/split (str/trim (slurp filepath)) #",")))
