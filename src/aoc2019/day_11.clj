@@ -51,28 +51,34 @@
      ; Updated visited-panels
      (assoc visited-panels position colour)]))
 
-(defn steps
-  "Returns the sequence of states, consisting of iteratively updating the robot
-  and the white-panels"
-  [robot white-panels]
-  (iterate #(apply robot-step %) [robot white-panels]))
+(defn run-robot [robot panels]
+  (->> [robot panels]
+       (iterate #(apply robot-step %))
+       (drop-while #(not (get-in % [0 :computer :halted?])))
+       (first)))
 
 (defn part-1 [program]
-  #_(loop [{:keys [halted?] :as robot} (make-robot program)
-         visited-panels {}]
-    (if halted?
-      (count visited-panels)
-      (let [[robot' visited-panels'] (robot-step robot visited-panels)]
-        (recur robot' visited-panels'))))
   (->> [(make-robot program) {}]
-       (apply steps)
-       (drop-while #(not (get-in % [0 :computer :halted?])))
-       (first)
+       (apply run-robot)
        (second)
        (count)))
 
+(defn bounds
+  "Takes a collection of (x, y) coordinates, and returns two new coordinates,
+  describing the smallest rectangle the coordinates fall into."
+  [coords]
+  (let [xs (map first coords)
+        ys (map second coords)]
+    [[(apply min xs) (apply min ys)]
+     [(apply max xs) (apply max ys)]]))
+
 (defn part-2 [program]
-  nil)
+  (let [[_ panels] (run-robot (make-robot program) {[0 0] white})
+        [[min-x min-y] [max-x max-y]] (bounds (keys panels))]
+    (reverse
+     (for [y (range min-y (inc max-y))]
+       (for [x (range min-x (inc max-x))]
+         (get panels [x y] black))))))
 
 (def filepath "resources/day11.txt")
 
