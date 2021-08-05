@@ -57,3 +57,14 @@
   "Subtracts two complex numbers"
   [[a1 b1] [a2 b2]]
   [(- a1 a2) (- b1 b2)])
+
+(defn find-first-index
+  "Takes a predicate and a collection. Returns the index of the first element
+  in the collection where (pred x) is truthy."
+  [pred coll]
+  (loop [[x & xs] (seq coll)
+         index 0]
+    (cond
+      (pred x) index
+      (empty? xs) nil
+      :else (recur xs (inc index)))))
