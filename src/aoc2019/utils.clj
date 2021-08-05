@@ -58,6 +58,11 @@
   [[a1 b1] [a2 b2]]
   [(- a1 a2) (- b1 b2)])
 
+(defn vector-add
+  "Adds any amount of vectors together"
+  [& vs]
+  (apply map + vs))
+
 (defn find-first-index
   "Takes a predicate and a collection. Returns the index of the first element
   in the collection where (pred x) is truthy."
