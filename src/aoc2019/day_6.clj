@@ -48,7 +48,7 @@
 
 (defn get-input [] (parse (slurp "resources/day6.txt")))
 
-(defn -main [& args]
+(defn -main [& _]
   (let [input (get-input)]
     (println (part-1 input))
     (println (part-2 input))))

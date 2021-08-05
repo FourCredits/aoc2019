@@ -82,7 +82,7 @@
 
 (def filepath "resources/day11.txt")
 
-(defn -main [& args]
+(defn -main [& _]
   (let [input (read-intcode-program filepath)]
     (println (part-1 input))
     (println (part-2 input))))

@@ -38,7 +38,7 @@
 (defn get-input []
   (map char->int (str/trim (slurp filepath))))
 
-(defn -main [& args]
+(defn -main [& _]
   (let [input (get-input)]
     (println (part-1 input))
     (doseq [i (part-2 input)] (println i))))

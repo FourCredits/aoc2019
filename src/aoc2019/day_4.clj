@@ -64,7 +64,7 @@
   []
   [278384 824795])
 
-(defn -main [& args]
+(defn -main [& _]
   (let [[lo hi] (get-input)]
     (println (part-1 lo hi))
     (println (part-2 lo hi))))

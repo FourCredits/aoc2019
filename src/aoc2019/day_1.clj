@@ -31,7 +31,7 @@
 
 (defn -main
   "Prints the result for part 1 and part 2 of day 1"
-  [& args]
+  [& _]
   (let [input (get-input)]
     (println "Part 1:" (solve part-1 input))
     (println "Part 2:" (solve part-2 input))))

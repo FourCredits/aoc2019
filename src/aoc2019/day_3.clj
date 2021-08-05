@@ -63,7 +63,7 @@
 
 (defn -main
   "Runs day 3"
-  [& args]
+  [& _]
   (let [input (get-input)]
     (println (part-1 input))
     (println (part-2 input))))

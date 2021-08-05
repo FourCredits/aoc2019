@@ -8,7 +8,7 @@
 
 (def filepath "resources/day9.txt")
 
-(defn -main [& args]
+(defn -main [& _]
   (let [program (read-intcode-program filepath)]
     (println (part-1 program))
     (println (part-2 program))))
