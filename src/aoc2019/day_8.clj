@@ -1,7 +1,7 @@
 (ns aoc2019.day-8
   (:gen-class)
   (:require [clojure.string :as str]
-            [aoc2019.utils :refer :all]))
+            [aoc2019.utils :refer [count-occurrence groups-of transpose]]))
 
 (defn verify-transmission
   "Takes a collection of numbers `coll`, a width `w`, and a height `h`. Finds
@@ -17,7 +17,7 @@
        (apply *)))
 
 (defn determine-color [pixels]
-  (if-let [[p & ps] (seq pixels)]
+  (when-let [[p & ps] (seq pixels)]
     (if (= p 2) (recur ps) p)))
 
 (defn decode-image [coll w h]

@@ -1,6 +1,6 @@
 (ns aoc2019.day-11
   (:gen-class)
-  (:require [aoc2019.intcode :refer :all]))
+  (:require [aoc2019.intcode :as i]))
 
 ; A robot consists of an intcode machine, a current position, and direction.
 ; Each tick will update will do some running of the machine, measure the
@@ -9,7 +9,7 @@
 (defn make-robot
   "Default-initialises a robot"
   [program]
-  {:computer (make-computer program)
+  {:computer (i/make-computer program)
    :position [0 0]
    :direction [0 1]})
 
@@ -37,11 +37,11 @@
   
   The program returns the updated robot state, as well as the updated set of
   panels the robot has painted white."
-  [{:keys [computer position direction] :as robot} visited-panels]
+  [{:keys [computer position direction]} visited-panels]
   (let [; Input value
-        computer' (input-value computer (get visited-panels position black))
+        computer' (i/input-value computer (get visited-panels position black))
         ; Run until needs input
-        {:keys [output] :as computer''} (run-until-needs-input computer')
+        {:keys [output] :as computer''} (i/run-until-needs-input computer')
         [colour turn] output
         direction' (update-direction direction turn)]
     [; Updated robot
@@ -83,6 +83,6 @@
 (def filepath "resources/day11.txt")
 
 (defn -main [& _]
-  (let [input (read-intcode-program filepath)]
+  (let [input (i/read-intcode-program filepath)]
     (println (part-1 input))
     (println (part-2 input))))

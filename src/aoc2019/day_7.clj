@@ -1,20 +1,20 @@
 (ns aoc2019.day-7
   (:gen-class)
-  (:require [aoc2019.intcode :refer :all]
+  (:require [aoc2019.intcode :as i]
             [clojure.math.combinatorics :as combo]))
 
 (defn make-amplifier
   "Takes an input program, a phase setting, and returns an amplifier - a
   computer ready to take input signals."
   [program phase]
-  (input-value (make-computer program) phase))
+  (i/input-value (i/make-computer program) phase))
 
 (defn series-connection
   "Takes any number of amplifiers, and produces an amplifier which is the
   combination of them. The output of `amp1` goes to `amp2`, and so on."
   [& amplifiers]
   (fn [input]
-    (reduce (comp :output run-until-needs-input input-values)
+    (reduce (comp :output i/run-until-needs-input i/input-values)
             [input]
             amplifiers)))
 
@@ -23,7 +23,7 @@
     (loop [signal [input]
            amps amplifiers]
       (if-let [[a & as] (seq amps)]
-        (let [a' (run-until-needs-input (input-values signal a))]
+        (let [a' (i/run-until-needs-input (i/input-values signal a))]
           (recur (:output a')
                  (concat as (if-not (:halted? a')
                               [(assoc a' :output [])])))) ; Reset the output

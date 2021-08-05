@@ -1,7 +1,7 @@
 (ns aoc2019.day-6
   (:gen-class)
   (:require [clojure.string :as str]
-            [aoc2019.utils :refer :all]))
+            [aoc2019.utils :refer [intersection]]))
 
 (defn find-sub-orbits
   "Returns a list of objects that orbit `object`, taken from the `orbits`

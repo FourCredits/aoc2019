@@ -2,7 +2,7 @@
   (:gen-class)
   (:require [clojure.string :as str]
             [clojure.set :as set]
-            [aoc2019.utils :refer :all]))
+            [aoc2019.utils :as i]))
 
 (def ^:private direction-vectors
   {\L [-1  0]
@@ -28,7 +28,7 @@
   [wires]
   (let [paths (map (comp set make-path) wires)]
     (->> (apply set/intersection paths)
-         (map manhattan-distance)
+         (map i/manhattan-distance)
          (sort)
          (first))))
 
@@ -36,7 +36,7 @@
   "For each path in `paths`, finds the number of steps needed to reach the given
   intersection. Returns the sum of those numbers."
   [paths intersection]
-  (apply + (map #(one-based-index-of % intersection) paths)))
+  (apply + (map #(i/one-based-index-of % intersection) paths)))
 
 (defn part-2
   [wires]

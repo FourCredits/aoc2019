@@ -1,7 +1,7 @@
 (ns aoc2019.intcode
   (:gen-class)
   (:require [clojure.string :as str]
-            [aoc2019.utils :refer :all]))
+            [aoc2019.utils :refer [digits]]))
 
 ; Intcode internal functions
 

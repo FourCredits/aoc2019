@@ -1,12 +1,12 @@
 (ns aoc2019.day-10
   (:gen-class)
   (:require [clojure.string :as str]
-            [aoc2019.utils :refer :all]))
+            [aoc2019.utils :as ut]))
 
 (defn num-line-of-sight
   "Counts the number of `asteriods` that are in direct line of sight of `pos`"
   [pos asteriods]
-  (count (set (map #(apply arg (complex-sub % pos)) asteriods))))
+  (count (set (map #(apply ut/arg (ut/complex-sub % pos)) asteriods))))
 
 (defn find-best-station
   "Among `potentials`, finds the best place to put a station - the best place
@@ -34,7 +34,7 @@
   "Returns the angle ABC, where A is the station + i, B is the station,
   and C is the asteriod. Note that the angle is from 0 to 2 * pi."
   [station asteriod]
-  (let [[x y] (complex-sub asteriod station)
+  (let [[x y] (ut/complex-sub asteriod station)
         angle (Math/atan2 x (- y))]
     (if (neg? angle)
       (+ angle (* 2 Math/PI))
@@ -54,7 +54,7 @@
   "Sorts a collection of asteriods by the magnitude of the distance from that
   asteriod to the station"
   [station others]
-  (sort-by #(magnitude (complex-sub station %)) others))
+  (sort-by #(ut/magnitude (ut/complex-sub station %)) others))
 
 (defn destroyed-order
   "Orders the asteriods in `others` in the order they would be destroyed by the
