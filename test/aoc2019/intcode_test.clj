@@ -106,7 +106,7 @@
     (is (= (:output (run-pure [4 34567 99])) [0])
            "You can read addresses much larger than initial program, and is
            by default 0")
-    (is (= (:output (run-pure [1102 4 5 34567 4 34567 99]) [9]))
+    (is (= (:output (run-pure [1102 4 5 34567 4 34567 99])) [20])
            "Large addresses outside of initial program can be written to and
            read from just like any other part of memory")))
 
