@@ -57,7 +57,7 @@
 (defn step
   "Takes a single step of the intcode machine. Does *not* process input
   instructions."
-  ([{:keys [memory pc] :as computer}]
+  ([{:keys [pc] :as computer}]
    (let [[opcode modes] (process-instruction (get-mem computer pc))]
      (step computer opcode modes)))
   ([computer opcode modes]
@@ -103,7 +103,7 @@
   instruction at pc is 3."
   [{:keys [memory pc] :as computer} value]
   {:pre [(= 3 (mod (get memory pc 0) 100))]}
-  (let [[opcode modes] (process-instruction (get-mem computer pc))]
+  (let [[_ modes] (process-instruction (get-mem computer pc))]
     (advance-by 2 (write-to-param computer modes 1 value))))
 
 (defn input-values
@@ -123,7 +123,7 @@
       (if halted?
         computer'
         (->> (read-line)
-             (Integer/valueOf)
+             Integer/valueOf
              (input-value computer')
              (recur))))))
 
