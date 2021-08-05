@@ -12,7 +12,7 @@
   `(process-instruction 1002)` returns `[2 [0 1 0 0 ...]]`"
   [n]
   (let [opcode (mod n 100)
-        modes (reverse (digits (int (/ n 100))))]
+        modes (reverse (digits (quot n 100)))]
     [opcode (concat modes (repeat 5 0))]))
 
 (defn- advance-by

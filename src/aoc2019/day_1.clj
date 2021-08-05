@@ -5,7 +5,7 @@
 (defn part-1 
   "Calculates the fuel needed for a given weight x."
   [x]
-  (- (int (/ x 3)) 2))
+  (- (quot x 3) 2))
 
 (defn part-2
   "Calculates the fuel needed for a given weight x, and the fuel needed for

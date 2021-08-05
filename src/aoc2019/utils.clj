@@ -36,7 +36,7 @@
          b a]
     (if (zero? b)
       acc
-      (recur (conj acc (mod b 10)) (int (/ b 10))))))
+      (recur (conj acc (mod b 10)) (quot b 10)))))
 
 (defn gcd [a b]
   (if (zero? b)
