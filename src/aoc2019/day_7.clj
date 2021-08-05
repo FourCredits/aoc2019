@@ -25,7 +25,7 @@
       (if-let [[a & as] (seq amps)]
         (let [a' (i/run-until-needs-input (i/input-values signal a))]
           (recur (:output a')
-                 (concat as (if-not (:halted? a')
+                 (concat as (when-not (:halted? a')
                               [(assoc a' :output [])])))) ; Reset the output
         signal))))
 
@@ -47,6 +47,6 @@
 (defn part-2 [program] (solve program feedback-loop [5 9]))
 
 (defn -main [& _]
-  (let [program (read-intcode-program "resources/day7.txt")]
+  (let [program (i/read-intcode-program "resources/day7.txt")]
     (println (part-1 program))
     (println (part-2 program))))

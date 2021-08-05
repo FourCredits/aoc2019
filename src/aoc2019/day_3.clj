@@ -15,7 +15,7 @@
   the positions that the wire passes through"
   ([wire] (make-path wire [0 0]))
   ([wire [x y]]
-   (if-let [[direction target] (first wire)]
+   (when-let [[direction target] (first wire)]
      (let [[dx dy]  (direction-vectors direction)
            progress (map #(vector (+ x (* dx %)) (+ y (* dy %)))
                          (range 1 (inc target)))]
