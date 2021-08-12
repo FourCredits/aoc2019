@@ -56,4 +56,4 @@
   (is (= (part-2 starting-positions-2) 4686774924)))
 
 (deftest part-2-real
-  (is (= (part-2 puzzle-input)) 402951477454512))
+  (is (= (part-2 puzzle-input) 402951477454512)))
