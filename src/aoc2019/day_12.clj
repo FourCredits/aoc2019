@@ -1,7 +1,7 @@
 (ns aoc2019.day-12
   (:gen-class)
   (:require [clojure.string :as str]
-            [aoc2019.utils :refer :all]
+            [aoc2019.utils :as u]
             [clojure.math.numeric-tower :refer [lcm]]))
 
 (defn update-velocity-amount
@@ -12,10 +12,10 @@
 
 (defn update-velocity [moon others]
   (let [diffs (map #(update-velocity-amount moon %) others)]
-    (update moon :vel #(apply vector-add % diffs))))
+    (update moon :vel #(apply u/vector-add % diffs))))
 
 (defn update-position [{:keys [vel] :as moon}]
-  (update moon :pos #(vector-add vel %)))
+  (update moon :pos #(u/vector-add vel %)))
 
 (defn tick
   "One simulation tick of the moons of jupiter"
@@ -77,7 +77,7 @@
      (for [axis [0 1 2]]
        (let [initial-axis (get-axis axis moons)]
          (->> states
-              (find-first-index #(= initial-axis (get-axis axis %)))
+              (u/find-first-index #(= initial-axis (get-axis axis %)))
               ; We ignore the first state (a copy of the original), so we have
               ; to add 1 to get back to the correct number
               inc))))))
