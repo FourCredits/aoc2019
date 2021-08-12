@@ -36,7 +36,7 @@
   [{:keys [pc relative-base] :as computer} param-num modes]
   {:pre [(pos? param-num)]}
   (let [param (get-mem computer (+ pc param-num))]
-    (case (nth modes (dec param-num))
+    (condp = (nth modes (dec param-num))
       0 (get-mem computer param)
       1 param
       2 (get-mem computer (+ relative-base param)))))
@@ -46,7 +46,7 @@
   [{:keys [pc relative-base] :as computer} modes param-num value]
   {:pre [(pos? param-num)]}
   (let [param (get-mem computer (+ pc param-num))
-        address (case (nth modes (dec param-num))
+        address (condp = (nth modes (dec param-num))
                   0 param
                   1 :error
                   2 (+ relative-base param))]
@@ -68,7 +68,7 @@
            (comparison-op [f] (binary-op #(if (f %1 %2) 1 0)))
            (jump-op [f]
              (update computer :pc #(if (f (read-p 1)) (read-p 2) (+ % 3))))]
-     (case opcode
+     (condp = opcode
        1  (advance-by 4 (binary-op +))
        2  (advance-by 4 (binary-op *))
        4  (advance-by 2 (update computer :output #(conj % (read-p 1))))
