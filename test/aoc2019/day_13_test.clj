@@ -5,10 +5,6 @@
 
 (def puzzle-input (i/read-intcode-program filepath))
 
-(deftest draw-board-test
-  (is (= (draw-board [1 2 3 6 5 4])
-         {[1 2] 3 [6 5] 4})))
-
 (deftest part-1-real
   (is (= (part-1 puzzle-input)
          265)))
