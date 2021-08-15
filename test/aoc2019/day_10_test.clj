@@ -1,7 +1,6 @@
 (ns aoc2019.day-10-test
   (:require [clojure.test :refer :all]
-            [aoc2019.day-10 :refer :all]
-            [aoc2019.intcode :refer [read-intcode-program]]))
+            [aoc2019.day-10 :refer :all]))
 
 (def test-fields
   [".#..#
