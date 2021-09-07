@@ -1,6 +1,6 @@
 (ns aoc2019.day-6-test
-  (:require [clojure.test :refer :all]
-            [aoc2019.day-6 :refer :all]))
+  (:require [clojure.test :as t]
+            [aoc2019.day-6 :refer [get-input parse part-1 part-2]]))
 
 (def example-string-1
   "COM)B
@@ -30,17 +30,18 @@ K)L
 K)YOU
 I)SAN")
 
-(deftest part-1-basic
-  (is (= (part-1 (parse "COM)AAA")) 1)))
+(t/deftest part-1-basic
+  (t/is (= (part-1 (parse "COM)AAA")) 1)))
 
-(deftest part-1-example
-  (is (= (part-1 (parse example-string-1)) 42)))
+(t/deftest part-1-example
+  (t/is (= (part-1 (parse example-string-1)) 42)))
 
-(deftest part-1-real
-  (is (= (part-1 (get-input)) 254447)))
+(t/deftest part-2-example
+  (t/is (= (part-2 (parse example-string-2)) 4)))
 
-(deftest part-2-example
-  (is (= (part-2 (parse example-string-2)) 4)))
+(def puzzle-input (get-input))
 
-(deftest part-2-real
-  (is (= (part-2 (get-input)) 445)))
+(t/deftest real
+  (t/are [part answer] (= (part puzzle-input) answer)
+    part-1 254447
+    part-2 445))

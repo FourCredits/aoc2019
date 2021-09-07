@@ -1,12 +1,11 @@
 (ns aoc2019.day-5-test
-  (:require [clojure.test :refer :all]
-            [aoc2019.day-5 :refer :all]
+  (:require [clojure.test :as t]
+            [aoc2019.day-5 :refer [filepath part-1 part-2]]
             [aoc2019.intcode :refer [read-intcode-program]]))
 
-(def input-program (read-intcode-program filepath))
+(def puzzle-input (read-intcode-program filepath))
 
-(deftest part-1-real
-  (is (= (part-1 input-program) 7259358)))
-
-(deftest part-2-real
-  (is (= (part-2 input-program) 11826654)))
+(t/deftest real
+  (t/are [part answer] (= (part puzzle-input) answer)
+    part-1 7259358
+    part-2 11826654))

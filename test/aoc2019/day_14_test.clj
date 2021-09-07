@@ -1,8 +1,6 @@
 (ns aoc2019.day-14-test
-  (:require [clojure.test :refer :all]
-            [aoc2019.day-14 :refer :all]))
-
-(def puzzle-input (get-input))
+  (:require [clojure.test :as t]
+            [aoc2019.day-14 :refer [get-input parse part-1 part-2]]))
 
 (def example-strings
   ["10 ORE => 10 A
@@ -59,22 +57,25 @@
 
 (def examples (map parse example-strings))
 
-(deftest part-1-examples
-  (are [reactions answer] (= (part-1 reactions) answer)
+(t/deftest part-1-examples
+  (t/are [reactions answer] (= (part-1 reactions) answer)
     (nth examples 0) 31
     (nth examples 1) 165
     (nth examples 2) 13312
     (nth examples 3) 180697
     (nth examples 4) 2210736))
 
-(deftest part-1-real
-  (is (= (part-1 puzzle-input) 1582325)))
-
-(deftest part-2-examples
-  (are [reactions answer] (= (part-2 reactions) answer)
+(t/deftest part-2-examples
+  (t/are [reactions answer] (= (part-2 reactions) answer)
     (nth examples 2) 82892753
     (nth examples 3) 5586022
     (nth examples 4) 460664))
 
-(deftest part-2-real
-  (is (= (part-2 puzzle-input) 2267486)))
+; Real
+
+(def puzzle-input (get-input))
+
+(t/deftest real
+  (t/are [part answer] (= (part puzzle-input) answer)
+    part-1 1582325
+    part-2 2267486))

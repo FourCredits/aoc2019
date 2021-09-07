@@ -1,27 +1,23 @@
 (ns aoc2019.day-1-test
-  (:require [clojure.test :refer :all]
-            [aoc2019.day-1 :refer :all]))
+  (:require [clojure.test :as t]
+            [aoc2019.day-1 :refer [part-1 part-2 get-input solve]]))
 
-(deftest part-1-test
-  (testing "part 1 works"
-    (is (= (part-1 12) 2))
-    (is (= (part-1 14) 2))
-    (is (= (part-1 1969) 654))
-    (is (= (part-1 100756) 33583))))
+(t/deftest part-1-test
+  (t/are [in out] (= (part-1 in) out)
+    12     2
+    14     2
+    1969   654
+    100756 33583))
 
-(deftest part-1-real
-  (testing "real answer is correct"
-    (is (= (let [input (get-input)] (solve part-1 input)) 3216868))))
+(t/deftest part-2-test
+  (t/are [in out] (= (part-2 in) out)
+    14     2
+    1969   966
+    100756 50346))
 
-(deftest part-2-test
-  (testing "part 2 works"
-    (let [p #(= (part-2 %1) %2)]
-      (is (p 14 2))
-      (is (p 1969 966))
-      (is (p 100756 50346)))))
+(def puzzle-input (get-input))
 
-(deftest part-2-real
-  (testing "real answer is correct"
-    (is (= (let [input (get-input)]
-             (solve part-2 input))
-           4822435))))
+(t/deftest real
+  (t/are [part answer] (= (solve part puzzle-input) answer)
+    part-1 3216868
+    part-2 4822435))

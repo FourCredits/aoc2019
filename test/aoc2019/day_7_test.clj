@@ -1,9 +1,8 @@
 (ns aoc2019.day-7-test
-  (:require [clojure.test :refer :all]
-            [aoc2019.day-7 :refer :all]
+  (:require [clojure.test :as t]
+            [aoc2019.day-7 :refer
+             [part-1 part-2 run-amplifiers series-connection]]
             [aoc2019.intcode :refer [read-intcode-program]]))
-
-(def puzzle-input (read-intcode-program "resources/day7.txt"))
 
 ; Part 1
 
@@ -20,24 +19,21 @@
     :settings [1 0 4 3 2]
     :output 65210}])
 
-(deftest run-amplifiers-test
-  (are [testcase]
-       (let [{:keys [program settings output]} testcase]
-         (= output (run-amplifiers series-connection program settings)))
+(t/deftest run-amplifiers-test
+  (t/are [testcase]
+         (let [{:keys [program settings output]} testcase]
+           (= output (run-amplifiers series-connection program settings)))
     (testcases-part-1 0)
     (testcases-part-1 1)
     (testcases-part-1 2)))
 
-(deftest part-1-examples
-  (are [testcase]
-       (let [{:keys [program output]} testcase]
-         (= output (part-1 program)))
+(t/deftest part-1-examples
+  (t/are [testcase]
+         (let [{:keys [program output]} testcase]
+           (= output (part-1 program)))
     (testcases-part-1 0)
     (testcases-part-1 1)
     (testcases-part-1 2)))
-
-(deftest part-1-real
-  (is (= (part-1 puzzle-input) 47064)))
 
 ; Part 2
 
@@ -52,12 +48,18 @@
     :settings [9 7 8 5 6]
     :max-output 18216}])
 
-(deftest part-2-examples
-  (are [testcase]
-       (let [{:keys [program max-output]} testcase]
-         (= max-output (part-2 program)))
+(t/deftest part-2-examples
+  (t/are [testcase]
+         (let [{:keys [program max-output]} testcase]
+           (= max-output (part-2 program)))
     (testcases-part-2 0)
     (testcases-part-2 1)))
 
-(deftest part-2-real
-  (is (= (part-2 puzzle-input) 4248984)))
+; Real
+
+(def puzzle-input (read-intcode-program "resources/day7.txt"))
+
+(t/deftest real
+  (t/are [part answer] (= (part puzzle-input) answer)
+    part-1 47064
+    part-2 4248984))
