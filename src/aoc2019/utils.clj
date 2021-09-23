@@ -38,11 +38,6 @@
       acc
       (recur (conj acc (mod b 10)) (quot b 10)))))
 
-(defn gcd [a b]
-  (if (zero? b)
-    a
-    (recur b (mod a b))))
-
 (defn arg
   "Finds the argument of a complex number."
   [real imag]
